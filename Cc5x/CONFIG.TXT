@@ -1,0 +1,149 @@
+
+DEVICE CONFIGURATION
+--------------------
+
+PICmicro configuration information can be put in the generated hex
+and assembly file. ID locations can also be programmed. The
+configuration information is generated IF AND ONLY IF the #pragma
+config statement is included.
+
+Note that some PICmicro programmers may reject this information,
+especially setting of the ID locations.
+
+Syntax:
+
+    #pragma config [<id>] = <state> [, <id> = <state>]
+
+    <id>    : PWRTE, WDTE, FOSC, BODEN, ID, reg2
+    <state> : on, off, LP,HS,XT,RC, <expression>
+
+    #pragma config WDTE=off, FOSC=HS
+    #pragma config WDTE=0, FOSC=2, PWRTE=1
+
+    #pragma config |= 0x100  // set bit 8
+    #pragma config &= 0xFFFC // clear bit 0 and 1
+    #pragma config &= ~3     // clear bit 0 and 1
+    #pragma config |= 3      // set bit 0 and 1
+
+More than one #pragma config statements is possible, where each
+statement modify one or more bits in the config register. The
+default setting of the bits is 0. The above statements will thus
+modify any previous settings. It is also possible to assign a single
+value to the config register, overwriting any previous setting:
+
+    #pragma config = (0x3 | 0x10) & 0x1FF
+
+Note that it is not possible to add more config identifiers than
+shown. But, using #define together with the operators '|' and '&'
+is possible:
+
+    #define CP_off |= 0x3F30
+    #pragma config CP_off, FOSC = LP
+
+
+  =====>    It is possible to use the STANDARD MPASM
+  =====>    identifiers for defining to configuration
+  =====>    bits. See example at the END of this file.
+
+
+The second config register (0x2008) is accessed using:
+
+    #pragma config reg2 = 0x3 | 0x4
+
+
+Programming of ID-locations:
+
+    #pragma config ID=0x1234   //  all 4 locations, 4 bit in each
+
+    #pragma config ID[0] = 0xF  //  location 0
+    #pragma config ID[1] = 0x0  //  location 1
+    #pragma config ID[2] = 1, ID[3] = 0x3
+
+
+Default configuration word address:
+    12 bit core:          0xFFF
+    14 bit core:          0x2007 and optional 0x2008
+    14 bit enhanced core: 0x8007 and optional 0x8008
+
+Default User ID addresses:
+    16C54/55:             0x200-0x203
+    16C56:                0x400-0x403
+    16C57/58:             0x800-0x803
+    14 bit core:          0x2000-0x2003
+    14 bit enhanced core: 0x8000-0x8003
+
+
+
+
+
+*******************************************************************
+EXAMPLE ON HOW TO USE THE STANDARD MPASM CONFIGURATION IDENTIFIERS
+
+1. First copy the identifiers from the right .INC file
+   (P16F887.INC) in the MPASM Suite directory into an
+   #asm .. #endasm region in a header/source file.
+
+2. Then use the EQU identifiers together with the '&' operator
+
+
+// PIC16F887
+
+#asm
+;----- Configuration Word1 ------------------------------------------------
+
+_DEBUG_ON                    EQU     H'1FFF'
+_DEBUG_OFF                   EQU     H'3FFF'
+_LVP_ON                      EQU     H'3FFF'
+_LVP_OFF                     EQU     H'2FFF'
+_FCMEN_ON                    EQU     H'3FFF'
+_FCMEN_OFF                   EQU     H'37FF'
+_IESO_ON                     EQU     H'3FFF'
+_IESO_OFF                    EQU     H'3BFF'
+_BOR_ON                      EQU     H'3FFF'
+_BOR_NSLEEP                  EQU     H'3EFF'
+_BOR_SBODEN                  EQU     H'3DFF'
+_BOR_OFF                     EQU     H'3CFF'
+_CPD_ON                      EQU     H'3F7F'
+_CPD_OFF                     EQU     H'3FFF'
+_CP_ON                       EQU     H'3FBF'
+_CP_OFF                      EQU     H'3FFF'
+_MCLRE_ON                    EQU     H'3FFF'
+_MCLRE_OFF                   EQU     H'3FDF'
+_PWRTE_ON                    EQU     H'3FEF'
+_PWRTE_OFF                   EQU     H'3FFF'
+_WDT_ON                      EQU     H'3FFF'
+_WDT_OFF                     EQU     H'3FF7'
+_LP_OSC                      EQU     H'3FF8'
+_XT_OSC                      EQU     H'3FF9'
+_HS_OSC                      EQU     H'3FFA'
+_EC_OSC                      EQU     H'3FFB'
+_INTRC_OSC_NOCLKOUT          EQU     H'3FFC'
+_INTRC_OSC_CLKOUT            EQU     H'3FFD'
+_EXTRC_OSC_NOCLKOUT          EQU     H'3FFE'
+_EXTRC_OSC_CLKOUT            EQU     H'3FFF'
+_INTOSCIO                    EQU     H'3FFC'
+_INTOSC                      EQU     H'3FFD'
+_EXTRCIO                     EQU     H'3FFE'
+_EXTRC                       EQU     H'3FFF'
+
+;----- Configuration Word2 ------------------------------------------------
+
+_WRT_OFF                     EQU     H'3FFF'
+_WRT_256                     EQU     H'3DFF'
+_WRT_1FOURTH                 EQU     H'3BFF'
+_WRT_HALF                    EQU     H'39FF'
+
+_BOR21V                      EQU     H'3EFF'
+_BOR40V                      EQU     H'3FFF'
+
+#endasm
+
+
+#pragma config = _PWRTE_ON & _WDT_ON & _LP_OSC
+#pragma config &= _DEBUG_ON & _LVP_ON
+
+#pragma config reg2 = _WRT_256 & _BOR21V
+
+// RESULT:
+// __config 0x2007, 0x1FE8
+// __config 0x2008, 0x3CFF

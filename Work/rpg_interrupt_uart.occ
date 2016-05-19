@@ -1,0 +1,22 @@
+CC5X Version 3.5D, Copyright (c) B Knudsen Data, Norway 1992-2015
+ --> FREE edition, 8-16 bit int, 24 bit float, 32k code, reduced optim.
+rpg_interrupt_uart.c:
+  5. Apr 2016  15:08
+ Chip = 16F690
+ RAM : -------- -------- -------- -------- ======== =====..* ******** ********
+  40h: ******** ******** ******** ******** ******** ******** =******* ********
+  80h: -------- -------- -------- -------- ******** ******** ******** ********
+  C0h: ******** ******** ******** ******** ******** ******** -------- --------
+ 100h: -------- -------- -------- -------- ******** ******** ******** ********
+ 140h: ******** ******** ******** ******** ******** ******** -------- --------
+RAM usage: 16 bytes (14 local), 240 bytes free
+Warning rpg_interrupt_uart.c 159: Duplicate inline division (math library may save code, option -wi removes warning)
+Warning rpg_interrupt_uart.c 161: Duplicate inline division (math library may save code, option -wi removes warning)
+ Optimizing - removed 8 instructions (-2 %)
+ File 'rpg_interrupt_uart.asm'
+ File 'rpg_interrupt_uart.occ'
+ File 'rpg_interrupt_uart.hex'
+ Codepage 0 has  372 word(s) :  18 %
+ Codepage 1 has    0 word(s) :   0 %
+Total of 372 code words (9 %)
+ * Estimated CODE SIZE of full optimization: 285 code words (-23 %)

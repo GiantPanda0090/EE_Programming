@@ -1,0 +1,20 @@
+CC5X Version 3.5D, Copyright (c) B Knudsen Data, Norway 1992-2015
+ --> FREE edition, 8-16 bit int, 24 bit float, 32k code, reduced optim.
+onoff.c:
+  5. Apr 2016  13:20
+ Chip = 16F690
+ RAM : -------- -------- -------- -------- ******** ******** ******** ********
+  40h: ******** ******** ******** ******** ******** ******** ******** ********
+  80h: -------- -------- -------- -------- ******** ******** ******** ********
+  C0h: ******** ******** ******** ******** ******** ******** -------- --------
+ 100h: -------- -------- -------- -------- ******** ******** ******** ********
+ 140h: ******** ******** ******** ******** ******** ******** -------- --------
+RAM usage: 0 bytes (0 local), 256 bytes free
+ Optimizing - removed 0 instructions (-0 %)
+ File 'onoff.asm'
+ File 'onoff.occ'
+ File 'onoff.hex'
+ Codepage 0 has   19 word(s) :   0 %
+ Codepage 1 has    0 word(s) :   0 %
+Total of 19 code words (0 %)
+ * Estimated CODE SIZE of full optimization: 15 code words (-21 %)

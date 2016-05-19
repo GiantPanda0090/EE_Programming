@@ -1,0 +1,28 @@
+CC5X Version 3.4H, Copyright (c) B Knudsen Data, Norway 1992-2012
+ --> FREE edition, 8-16 bit int, 24 bit float, 32k code, reduced optim.
+metalsensor.c:
+ 12. May 2016   9:44
+Warning metalsensor.c 218: Only one call to '_divU16_8' (try inline code to save space OR option -wm to remove warning)
+Warning metalsensor.c 218: Only one call to '_divU16_16' (try inline code to save space OR option -wm to remove warning)
+Warning metalsensor.c 218: Only one call to '_remU16_8' (try inline code to save space OR option -wm to remove warning)
+ Chip = 16F690
+ RAM : -------- -------- -------- -------- ======== ======== ======== ===*****
+  40h: ******** ******** ******** ******** ******** ******** ******** ********
+  80h: -------- -------- -------- -------- ******** ******** ******** ********
+  C0h: ******** ******** ******** ******** ******** ******** -------- --------
+ 100h: -------- -------- -------- -------- ******** ******** ******** ********
+ 140h: ******** ******** ******** ******** ******** ******** -------- --------
+RAM usage: 27 bytes (27 local), 229 bytes free
+ Optimizing - removed 14 instructions (-3 %)
+ File 'metalsensor.asm'
+ File 'metalsensor.occ'
+Warning metalsensor.c 27: Read-modify-write sequence on the same PORT may fail
+ (Two consecutive instructions modifying the same PORT may fail depending on
+ execution speed and load (fall/rise times) on the port pins. Option -wf will
+ remove this warning)
+Warning metalsensor.c 76: Read-modify-write sequence on the same PORT may fail
+ File 'metalsensor.hex'
+ Codepage 0 has  434 word(s) :  21 %
+ Codepage 1 has    0 word(s) :   0 %
+Total of 434 code words (10 %)
+ * Estimated CODE SIZE of full optimization: 327 code words (-24 %)

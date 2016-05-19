@@ -1,0 +1,20 @@
+CC5X Version 3.5D, Copyright (c) B Knudsen Data, Norway 1992-2015
+ --> FREE edition, 8-16 bit int, 24 bit float, 32k code, reduced optim.
+test4.c:
+  5. Apr 2016  13:10
+ Chip = 16F690
+ RAM : -------- -------- -------- -------- ======== ======== =====.** ********
+  40h: ******** ******** ******** ******** ******** ******** ******** ********
+  80h: -------- -------- -------- -------- ******** ******** ******** ********
+  C0h: ******** ******** ******** ******** ******** ******** -------- --------
+ 100h: -------- -------- -------- -------- ******** ******** ******** ********
+ 140h: ******** ******** ******** ******** ******** ******** -------- --------
+RAM usage: 22 bytes (21 local), 234 bytes free
+ Optimizing - removed 39 instructions (-6 %)
+ File 'test4.asm'
+ File 'test4.occ'
+ File 'test4.hex'
+ Codepage 0 has  523 word(s) :  25 %
+ Codepage 1 has    0 word(s) :   0 %
+Total of 523 code words (12 %)
+ * Estimated CODE SIZE of full optimization: 399 code words (-23 %)

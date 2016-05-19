@@ -1,0 +1,25 @@
+CC5X Version 3.5D, Copyright (c) B Knudsen Data, Norway 1992-2015
+ --> FREE edition, 8-16 bit int, 24 bit float, 32k code, reduced optim.
+duty_value.c:
+ 15. Apr 2016  14:54
+ Chip = 16F690
+Warning duty_value.c 186: Local variables and parameters in uncalled functions are not allocated (21)
+ (The application contains non-library functions that are not called. Local
+ variables in these functions (option -wU) are not allocated to save space)
+ RAM : -------- -------- -------- -------- ======== ******** ******** ********
+  40h: ******** ******** ******** ******** ******** ******** ******** ********
+  80h: -------- -------- -------- -------- ******** ******** ******** ********
+  C0h: ******** ******** ******** ******** ******** ******** -------- --------
+ 100h: -------- -------- -------- -------- ******** ******** ******** ********
+ 140h: ******** ******** ******** ******** ******** ******** -------- --------
+RAM usage: 8 bytes (8 local), 248 bytes free
+Warning duty_value.c 121: Duplicate inline division (math library may save code, option -wi removes warning)
+Warning duty_value.c 123: Duplicate inline division (math library may save code, option -wi removes warning)
+ Optimizing - removed 7 instructions (-2 %)
+ File 'duty_value.asm'
+ File 'duty_value.occ'
+ File 'duty_value.hex'
+ Codepage 0 has  255 word(s) :  12 %
+ Codepage 1 has    0 word(s) :   0 %
+Total of 255 code words (6 %)
+ * Estimated CODE SIZE of full optimization: 239 code words (-6 %)

@@ -1,0 +1,22 @@
+CC5X Version 3.4H, Copyright (c) B Knudsen Data, Norway 1992-2012
+ --> FREE edition, 8-16 bit int, 24 bit float, 32k code, reduced optim.
+frequency.c:
+ 12. May 2016  10:07
+Warning frequency.c 214: Only one call to '_divU16_8' (try inline code to save space OR option -wm to remove warning)
+Warning frequency.c 214: Only one call to '_remU16_8' (try inline code to save space OR option -wm to remove warning)
+ Chip = 16F690
+ RAM : -------- -------- -------- -------- ======== ======== ======== ===*****
+  40h: ******** ******** ******** ******** ******** ******** ******** ********
+  80h: -------- -------- -------- -------- ******** ******** ******** ********
+  C0h: ******** ******** ******** ******** ******** ******** -------- --------
+ 100h: -------- -------- -------- -------- ******** ******** ******** ********
+ 140h: ******** ******** ******** ******** ******** ******** -------- --------
+RAM usage: 27 bytes (27 local), 229 bytes free
+ Optimizing - removed 13 instructions (-2 %)
+ File 'frequency.asm'
+ File 'frequency.occ'
+ File 'frequency.hex'
+ Codepage 0 has  423 word(s) :  20 %
+ Codepage 1 has    0 word(s) :   0 %
+Total of 423 code words (10 %)
+ * Estimated CODE SIZE of full optimization: 324 code words (-23 %)

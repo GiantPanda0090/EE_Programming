@@ -1,0 +1,20 @@
+CC5X Version 3.5D, Copyright (c) B Knudsen Data, Norway 1992-2015
+ --> FREE edition, 8-16 bit int, 24 bit float, 32k code, reduced optim.
+toggle.c:
+  5. Apr 2016  13:33
+ Chip = 16F690
+ RAM : -------- -------- -------- -------- ===***** ******** ******** ********
+  40h: ******** ******** ******** ******** ******** ******** ******** ********
+  80h: -------- -------- -------- -------- ******** ******** ******** ********
+  C0h: ******** ******** ******** ******** ******** ******** -------- --------
+ 100h: -------- -------- -------- -------- ******** ******** ******** ********
+ 140h: ******** ******** ******** ******** ******** ******** -------- --------
+RAM usage: 3 bytes (3 local), 253 bytes free
+ Optimizing - removed 5 instructions (-8 %)
+ File 'toggle.asm'
+ File 'toggle.occ'
+ File 'toggle.hex'
+ Codepage 0 has   55 word(s) :   2 %
+ Codepage 1 has    0 word(s) :   0 %
+Total of 55 code words (1 %)
+ * Estimated CODE SIZE of full optimization: 40 code words (-27 %)

@@ -1,0 +1,19 @@
+CC5X Version 3.4H, Copyright (c) B Knudsen Data, Norway 1992-2012
+ --> FREE edition, 8-16 bit int, 24 bit float, 32k code, reduced optim.
+EX.c:
+  7. Apr 2016  23:20
+
+  while(1){
+  lcd_write("lets");
+                  ^------
+Error EX.c 32: Incompatible storage, 'const *' is required
+
+  }
+  
+  ^------
+Error EX.c 34: Syntax error (or limitation)
+ (CC5X is unable to compile the expression due to syntax error or
+ limited C support. Code correction is required. Check also for
+ unbalanced block delimiters '{ .. }' in previous statements)
+
+Error options: -ew: no warning details  -ed: no error details  -eL: list details

@@ -1,0 +1,20 @@
+CC5X Version 3.4H, Copyright (c) B Knudsen Data, Norway 1992-2012
+ --> FREE edition, 8-16 bit int, 24 bit float, 32k code, reduced optim.
+speed.c:
+ 12. May 2016  10:32
+ Chip = 16F690
+ RAM : -------- -------- -------- -------- =******* ******** ******** ********
+  40h: ******** ******** ******** ******** ******** ******** ******** ********
+  80h: -------- -------- -------- -------- ******** ******** ******** ********
+  C0h: ******** ******** ******** ******** ******** ******** -------- --------
+ 100h: -------- -------- -------- -------- ******** ******** ******** ********
+ 140h: ******** ******** ******** ******** ******** ******** -------- --------
+RAM usage: 1 bytes (1 local), 255 bytes free
+ Optimizing - removed 1 instructions (-1 %)
+ File 'speed.asm'
+ File 'speed.occ'
+ File 'speed.hex'
+ Codepage 0 has   67 word(s) :   3 %
+ Codepage 1 has    0 word(s) :   0 %
+Total of 67 code words (1 %)
+ * Estimated CODE SIZE of full optimization: 58 code words (-13 %)
