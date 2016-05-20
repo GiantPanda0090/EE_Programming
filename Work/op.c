@@ -16,7 +16,7 @@
 #pragma bit TREN_DC  @ TRISC.5
 
 #pragma bit DR_DC  @ PORTB.7
-#pragma bit TRDR_DC  @ TRISC.7
+#pragma bit TRDR_DC  @ TRISB.7
 
 #define DUTY 128
 
@@ -44,7 +44,7 @@ void printf(const char *string, char variable);
 //void lcd_poweroff(void);
 char getchar_eedata( char adress );
 void putchar_eedata( char data, char adress );
-void direc_change(void);
+int direc_change();
 void lcd_reset(void);
 //******************************************************************************//
 
@@ -93,7 +93,7 @@ nop();
  init_interrupt(); 
  nop();
   /* You should "connect" PK2 UART-tool in one second after power on! */
-  delay(1000); 
+  delay(256); 
   delay(100);
   //***************************************************************//
  /*PWM INIT*/
@@ -116,7 +116,7 @@ delay(100);
 //************************************************************************************// 
     printf("Initialization complete\r\n",0);
 //************************************************************************************//
-
+int s;
 char i;
   printf("Menu: 1, 2, 3, h\r\n",0);
  char save;
@@ -132,7 +132,7 @@ char i;
         receiver_flag = 0;      /* Character now taken - reset the flag */
 		 save = choice;
 		 
-		/* LCD °and UART print sequence*/
+		/* NON-LOOP SEQUENCE*/
 		switch (choice)
          {
           case '1':
@@ -163,7 +163,19 @@ char i;
 		   TREN_DC=1;
            break;
           case '3':
-           printf("%c Direction changed: ", choice);
+		  s=direc_change();
+		  /*SWITCH MODE PWM OFF, PUSH 1 INESTEAD INCASE JAMMING LCD SIGNAL*/
+		    CCP1CON = 0b00.00.0000 ;
+          TREN_DC=0;		  
+          EN_DC=1;
+		  /*LCD OPORATION*/
+		  nop();
+		  lcd_reset();
+		   nop();
+		  lcd_putline(0x0,"Dir chan");
+		  lcd_putline(0x8,"ged");
+		  power_on();
+           printf("%c Direction changed \r\n", choice);
            //printf("%u\r\n", (char) PORTB.6);
            break;
    case 'h':
@@ -198,7 +210,7 @@ nop();
 		  // putchar_eedata((char) PORTB.6,1);
            break;
           case '3':
-          direc_change();
+          DR_DC=s;
            break;
    case 'h':
   
@@ -236,8 +248,18 @@ void power_off(void){
 CCP1CON = 0b00.00.0000 ; 
 EN_DC=0;
 }
-void direc_change(void){
-CCP1CON = 0b11.00.1100 ; //should use direction pin instead
+int direc_change(){
+int s;
+nop();
+		  TRDR_DC=0;
+		  if(DR_DC==1){
+		  s=0;
+		  }
+		  else{
+		  s=1;
+		  }
+		  nop();
+		  return s;
 }
 
 void power_on(void){
