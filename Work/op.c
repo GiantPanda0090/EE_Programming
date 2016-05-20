@@ -172,8 +172,14 @@ char i;
 		  nop();
 		  lcd_reset();
 		   nop();
-		  lcd_putline(0x0,"Dir chan");
-		  lcd_putline(0x8,"ged");
+		   if (s ==1){
+		  lcd_putline(0x0,"CLK dire");
+		  lcd_putline(0x8,"ction");
+		  }
+		  if (s ==0){
+		  lcd_putline(0x0,"anti-CLK");
+		  lcd_putline(0x8,"direct");
+		  }
 		  power_on();
            printf("%c Direction changed \r\n", choice);
            //printf("%u\r\n", (char) PORTB.6);
