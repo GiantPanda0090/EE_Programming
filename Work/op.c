@@ -15,6 +15,9 @@
 #pragma bit EN_DC  @ PORTC.5
 #pragma bit TREN_DC  @ TRISC.5
 
+#pragma bit DR_DC  @ PORTB.7
+#pragma bit TRDR_DC  @ TRISC.7
+
 #define DUTY 128
 
 //define//
@@ -27,23 +30,26 @@ void init_interrupt( void );
 void delay( char ); // ms delay function
 void lcd_init( void );
 void lcd_putchar( char );
-char text1( char );
-char text2( char );
-char text3( char );
-char text4( char );
+void lcd_putline(char start, const char * text);
+//char text1( char );
+//char text2( char );
+//char text3( char );
+//char text4( char );
 void putchar( char );
 char getchar( void );
 void power_on(void);
 void power_off(void);
 void printf(const char *string, char variable);
-void lcd_poweron(void);
-void lcd_poweroff(void);
+//void lcd_poweron(void);
+//void lcd_poweroff(void);
 char getchar_eedata( char adress );
 void putchar_eedata( char data, char adress );
 void direc_change(void);
+void lcd_reset(void);
 //******************************************************************************//
 
 /*interupt*/
+/* FOR INPUT CHARACTOR FROM  PC WITH UART BITBANING*/
 //*****************************************************************************//
 bit receiver_flag;   /* Signal-flag used by interrupt routine   */
 char receiver_byte;  /* Transfer Byte used by interrupt routine */
@@ -76,19 +82,27 @@ interrupt int_server( void ) /* the place for the interrupt routine */
   /* New interrupts are now enabled */
 }
 //******************************************************************************//
-
+/*MAIN*/
 void main(void)
 {
  char choice;  int cnt = 0;
-  
  //***********************************************************//  
+ /*initialize*/
 init_serial();
+nop();
  init_interrupt(); 
+ nop();
+  /* You should "connect" PK2 UART-tool in one second after power on! */
+  delay(1000); 
+  delay(100);
+  //***************************************************************//
+ /*PWM INIT*/
    T2CON = 0b0.0000.1.01; /* prescale 1:1     */
    //CCP1CON = 0b01.00.1100 ;  /* PWM-mode         */
    PR2     = 255;            /* max value        */
    CCPR1L  = 200; 
-     
+   delay(100);
+     /*LCD IO INIT*/
 /* I/O-pin direction in/out definitions, change if needed  */
 	ANSEL=0; 	//  PORTC digital I/O
 	ANSELH=0;
@@ -96,17 +110,14 @@ init_serial();
     TRISB.4=0; /* RB4, RB6 out */
     TRISB.6=0;	
 	
-//power_off();
+nop();
+lcd_init();
+delay(100);
+//************************************************************************************// 
+    printf("Initialization complete\r\n",0);
+//************************************************************************************//
 
-    char i;
-    lcd_init();
-//***************************************************************//
-
- 
-
-  /* You should "connect" PK2 UART-tool in one second after power on! */
-  delay(1000); 
-
+char i;
   printf("Menu: 1, 2, 3, h\r\n",0);
  char save;
 /* uart_ choose*/
@@ -116,24 +127,40 @@ init_serial();
    
      if( receiver_flag ) /* Character received? */ 
       {
-	 
+	 /*initialize flages and save choice value to the swtich later (PWM)*/
         choice = receiver_byte; /* get Character from interrupt routine */
         receiver_flag = 0;      /* Character now taken - reset the flag */
 		 save = choice;
-		
+		 
+		/* LCD °and UART print sequence*/
 		switch (choice)
          {
           case '1':
-		   lcd_poweron();
+		  TREN_DC=1;
+		  nop();
+		  lcd_reset();
 		   nop();
+		   lcd_putline(0,"Power on");
+		   delay(10);
            printf("%c The power is now on. Press a to abort to main menu.\r\n", choice);
+		   nop();
+		   TREN_DC=0;
 		   nop();
            break;
           case '2':
-		  //lcd_poweroff();
+		  nop();
+           power_off();
 		   nop();
+		  TREN_DC=0;
+		  lcd_reset();
+		 nop();
+		 lcd_putline(0x0,"Power of");
+		 
+		  lcd_putline(0x8,"f");
+		   delay(10);
            printf("%c Power off\r\n", choice);
 		   nop();
+		   TREN_DC=1;
            break;
           case '3':
            printf("%c Direction changed: ", choice);
@@ -149,23 +176,25 @@ init_serial();
          }
 		 nop();
       }
-	  
+/*reload save value*/	  
 nop();
 choice = save;
 nop();
+/*PWM oporation*/
  switch (choice)
          {
           case '1':
-		 
+		 nop();
            power_on();
 		   //putchar_eedata((char) PORTB.6,1);
 		   nop();
-		  
            break;
           case '2':
+		  /*
 		  nop();
            power_off();
 		   nop();
+		   */
 		  // putchar_eedata((char) PORTB.6,1);
            break;
           case '3':
@@ -175,7 +204,7 @@ nop();
   
    break;
           default:
-		  
+		  nop();
 			 
 			 //printf(getchar_eedata(1), 0);
          }
@@ -200,66 +229,21 @@ nop();
  
 
 }
+//library
 //***************************************************************************************************************************************************************************************************//
+/*PWM ACTION*/
 void power_off(void){
- 
 CCP1CON = 0b00.00.0000 ; 
+EN_DC=0;
 }
 void direc_change(void){
-CCP1CON = 0b11.00.1100 ; 
-}
-
-void lcd_poweron(void){
-int i;
-
-    RS = 0;  // LCD in command-mode
-    lcd_putchar(0b00000001); 
-	lcd_putchar(0b00000110);
-	
-RS = 1;  // LCD in character-mode
-    // display the 8 char text1() sentence
-    for(i=0; i<8; i++) lcd_putchar(text1(i)); 
-	RS = 0;
-}
-
-void lcd_poweroff(void){
-int i;
-
-    RS = 0;  // LCD in command-mode
-    lcd_putchar(0b00000001); 
-	lcd_putchar(0b00000110);
-	
-RS = 1;  // LCD in character-mode
-    // display the 8 char text1() sentence
-    for(i=0; i<8; i++) lcd_putchar(text3(i)); 
-RS = 0;
+CCP1CON = 0b11.00.1100 ; //should use direction pin instead
 }
 
 void power_on(void){
 CCP1CON = 0b01.00.1100 ; 
 }
-
-char text1( char x)   // this is the way to store a sentence
-{
-   skip(x); /* internal function CC5x.  */
-   #pragma return[] = "Power on"    // 8 chars max!
-}
-
-char text2( char x)   // this is the way to store a sentence
-{
-   skip(x); /* internal function CC5x.  */
-   #pragma return[] = ""    // 8 chars max!
-}
-char text3( char x)   // this is the way to store a sentence
-{
-   skip(x); /* internal function CC5x.  */
-   #pragma return[] = "Power off"    // 8 chars max!
-}
-char text4( char x)   // this is the way to store a sentence
-{
-   skip(x); /* internal function CC5x.  */
-   #pragma return[] = ""    // 8 chars max!
-}
+/*INITIALIZATION*/
 void init_serial( void )  /* initialise PIC16F690 bitbang serialcom */
 {
    ANSEL.0 = 0; /* No AD on RA0             */
@@ -284,29 +268,57 @@ void lcd_init( void ) // must be run once before using the display
   delay(40);  // give LCD time to settle
   RS = 0;     // LCD in command-mode
   lcd_putchar(0b0011.0011); /* LCD starts in 8 bit mode          */
+  nop();
   lcd_putchar(0b0011.0010); /* change to 4 bit mode              */
+  nop();
   lcd_putchar(0b00101000);  /* two line (8+8 chars in the row)   */ 
+  nop();
   lcd_putchar(0b00001100);  /* display on, cursor off, blink off */
+  nop();
   lcd_putchar(0b00000001);  /* display clear                     */
+  nop();
   lcd_putchar(0b00000110);  /* increment mode, shift off         */
+  nop();
   RS = 1;    // LCD in character-mode
              // initialization is done!
 }
-
-void putchar( char ch )  /* sends one char */
+/*PRINT ACTION*/
+/*lcd*/
+void lcd_reset(void){
+   nop();
+   RS=0;
+  nop();
+  lcd_putchar(0b00001000);  /* display off, cursor off, blink off */
+  delay(10);  // give LCD time to settle
+  lcd_putchar(0b00001100);  /* display on, cursor off, blink off */
+  nop();
+  lcd_putchar(0b00000001);  /* display clear                     */
+  nop();
+  lcd_putchar(0b00000110);  /* increment mode, shift off         */
+  nop();
+  RS = 1;    // LCD in character-mode
+             // initialization is done!
+}
+void lcd_putline(char start, const char * text)
 {
-  char bitCount, ti;
-  PORTA.0 = 0; /* set startbit */
-  for ( bitCount = 10; bitCount > 0 ; bitCount-- )
-   {
-     /* delay one bit 104 usec at 4 MHz       */
-     /* 5+18*5-1+1+9=104 without optimization */ 
-     ti = 18; do ; while( --ti > 0); nop(); 
-     Carry = 1;     /* stopbit                    */
-     ch = rr( ch ); /* Rotate Right through Carry */
-     PORTA.0 = Carry;
-   }
-  return;
+if (start >0x7){
+      // reposition to "line 2" (the next 8 chars)
+          RS = 0;  // LCD in command-mode
+          lcd_putchar( 0b11000000 );
+		  start=start-0x8;
+		  }
+   RS = 0;  // LCD in command-mode
+   lcd_putchar( start );  // move to text position
+   RS = 1;  // LCD in character-mode
+   
+   char i, k;
+   for(i = 0 ; ; i++)
+    {
+      k = text[i];
+      if( k == '\0') return;   // found end of string
+      lcd_putchar(k); 
+    }
+   return;  
 }
 
 void lcd_putchar( char data )
@@ -333,6 +345,24 @@ void lcd_putchar( char data )
   EN = 1;
   delay(5);
 }
+/*uart*/
+void putchar( char ch )  /* sends one char */
+{
+  char bitCount, ti;
+  PORTA.0 = 0; /* set startbit */
+  for ( bitCount = 10; bitCount > 0 ; bitCount-- )
+   {
+     /* delay one bit 104 usec at 4 MHz       */
+     /* 5+18*5-1+1+9=104 without optimization */ 
+     ti = 18; do ; while( --ti > 0); nop(); 
+     Carry = 1;     /* stopbit                    */
+     ch = rr( ch ); /* Rotate Right through Carry */
+     PORTA.0 = Carry;
+   }
+  return;
+}
+
+
 void printf(const char *string, char variable)
 {
   char i, k, m, a, b;
@@ -380,7 +410,7 @@ void printf(const char *string, char variable)
       else putchar(k);
    }
 }
-
+/*DELAY*/
 void delay( char millisec)
 /* 
   Delays a multiple of 1 milliseconds at 4 MHz (16F628 internal clock)
@@ -394,6 +424,7 @@ void delay( char millisec)
             ;
     } while ( -- millisec > 0);
 }
+/*MEMORY ACCESS*/
 void putchar_eedata( char data, char adress )
 {
 /* Put char in specific EEPROM-adress */
