@@ -1,25 +1,25 @@
 CC5X Version 3.4H, Copyright (c) B Knudsen Data, Norway 1992-2012
  --> FREE edition, 8-16 bit int, 24 bit float, 32k code, reduced optim.
 op.c:
- 19. May 2016  17:03
+ 21. May 2016  15:33
  Chip = 16F690
-Warning op.c 426: Local variables and parameters in uncalled functions are not allocated (8)
+Warning op.c 528: Local variables and parameters in uncalled functions are not allocated (4)
  (The application contains non-library functions that are not called. Local
  variables in these functions (option -wU) are not allocated to save space)
- RAM : -------- -------- -------- -------- ======== ======== ==7.**** ********
+ RAM : -------- -------- -------- -------- ======== ======== ====7..* ********
   40h: ******** ******** ******** ******** ******** ******** =******* ********
   80h: -------- -------- -------- -------- ******** ******** ******** ********
   C0h: ******** ******** ******** ******** ******** ******** -------- --------
  100h: -------- -------- -------- -------- ******** ******** ******** ********
  140h: ******** ******** ******** ******** ******** ******** -------- --------
-RAM usage: 21 bytes (19 local), 235 bytes free
-Warning op.c 355: Duplicate inline division (math library may save code, option -wi removes warning)
-Warning op.c 357: Duplicate inline division (math library may save code, option -wi removes warning)
- Optimizing - removed 16 instructions (-1 %)
+RAM usage: 24 bytes (21 local), 232 bytes free
+Warning op.c 449: Duplicate inline division (math library may save code, option -wi removes warning)
+Warning op.c 451: Duplicate inline division (math library may save code, option -wi removes warning)
+ Optimizing - removed 22 instructions (-1 %)
  File 'op.asm'
  File 'op.occ'
  File 'op.hex'
- Codepage 0 has  791 word(s) :  38 %
+ Codepage 0 has 1030 word(s) :  50 %
  Codepage 1 has    0 word(s) :   0 %
-Total of 791 code words (19 %)
- * Estimated CODE SIZE of full optimization: 651 code words (-17 %)
+Total of 1030 code words (25 %)
+ * Estimated CODE SIZE of full optimization: 847 code words (-17 %)

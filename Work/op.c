@@ -23,6 +23,7 @@
 //define//
 //************************************************************************//
 void init( void );
+void delay10( char);
 void initserial( void );
 void init_io_ports( void );
 void init_serial( void );
@@ -46,6 +47,7 @@ char getchar_eedata( char adress );
 void putchar_eedata( char data, char adress );
 int direc_change();
 void lcd_reset(void);
+void pwm_off(void);
 //******************************************************************************//
 
 /*interupt*/
@@ -53,6 +55,7 @@ void lcd_reset(void);
 //*****************************************************************************//
 bit receiver_flag;   /* Signal-flag used by interrupt routine   */
 char receiver_byte;  /* Transfer Byte used by interrupt routine */
+ int flag_th;
 
 #pragma origin 4
 interrupt int_server( void ) /* the place for the interrupt routine */
@@ -64,14 +67,14 @@ interrupt int_server( void ) /* the place for the interrupt routine */
   if( PORTA.1 == 0 )  /* Interpret this as the startbit  */
     {  /* Receive one full character   */
       char bitCount, ti;
-      /* delay 1,5 bit 156 usec at 4 MHz         */
+      /* delay10 1,5 bit 156 usec at 4 MHz         */
       /* 5+28*5-1+1+2+9=156 without optimization */
       ti = 28; do ; while( --ti > 0); nop(); nop2();
       for( bitCount = 8; bitCount > 0 ; bitCount--)
        {
          Carry = PORTA.1;
          receiver_byte = rr( receiver_byte);  /* rotate carry */
-         /* delay one bit 104 usec at 4 MHz       */
+         /* delay10 one bit 104 usec at 4 MHz       */
          /* 5+18*5-1+1+9=104 without optimization */ 
          ti = 18; do ; while( --ti > 0); nop(); 
         }
@@ -86,6 +89,7 @@ interrupt int_server( void ) /* the place for the interrupt routine */
 void main(void)
 {
  char choice;  int cnt = 0;
+flag_th=0;
  //***********************************************************//  
  /*initialize*/
 init_serial();
@@ -93,8 +97,8 @@ nop();
  init_interrupt(); 
  nop();
   /* You should "connect" PK2 UART-tool in one second after power on! */
-  delay(256); 
-  delay(100);
+  delay10(1000); 
+ // delay10(100);
   //***************************************************************//
  /*PWM INIT*/
    T2CON = 0b0.0000.1.01; /* prescale 1:1     */
@@ -112,14 +116,21 @@ nop();
 	
 nop();
 lcd_init();
-delay(100);
+delay10(10000);
 //************************************************************************************// 
-    printf("Initialization complete\r\n",0);
+    //printf("Initialization complete\r\n",0);
+	nop();
+	lcd_reset();
+	 lcd_putline(0x0,"Welcome!");
+	 nop();
+	 //lcd_putline(0x8,"");
 //************************************************************************************//
+
 int s;
 char i;
-  printf("Menu: 1, 2, 3, h\r\n",0);
+  printf("Menu: 1, 2, 3\r\n",0);
  char save;
+ //TRISB.5=0;
 /* uart_ choose*/
 //****************************************************************************//
   while(1)
@@ -155,7 +166,6 @@ char i;
 		  lcd_reset();
 		 nop();
 		 lcd_putline(0x0,"Power of");
-		 
 		  lcd_putline(0x8,"f");
 		   delay(10);
            printf("%c Power off\r\n", choice);
@@ -163,6 +173,7 @@ char i;
 		   TREN_DC=1;
            break;
           case '3':
+		  if(flag_th==1){
 		  s=direc_change();
 		  /*SWITCH MODE PWM OFF, PUSH 1 INESTEAD INCASE JAMMING LCD SIGNAL*/
 		    CCP1CON = 0b00.00.0000 ;
@@ -182,15 +193,30 @@ char i;
 		  }
 		  power_on();
            printf("%c Direction changed \r\n", choice);
+		   }
+		   else{
+		   printf("%c Use command 1 to power on first before doing the direction changed \r\n", choice);
+		   nop();
+		   pwm_off();
+		   nop();
+		   lcd_reset();
+		   lcd_putline(0x0,"Error po");
+		  lcd_putline(0x8,"wer off");
+		   }
            //printf("%u\r\n", (char) PORTB.6);
            break;
-   case 'h':
-  
+		   /*
+   case '4':
+   printf((char) flag_th, choice);
    break;
+   */
           default:
-		  printf("%c choose H for help \r\n", choice);
+		  //PORTB.5=0;
            printf("%c You must choose between: 1, 2, 3 \r\n", choice);
+		   
 			 //printf(getchar_eedata(1), 0);
+			 /*
+			 */
          }
 		 nop();
       }
@@ -204,6 +230,7 @@ nop();
           case '1':
 		 nop();
            power_on();
+		   
 		   //putchar_eedata((char) PORTB.6,1);
 		   nop();
            break;
@@ -216,11 +243,13 @@ nop();
 		  // putchar_eedata((char) PORTB.6,1);
            break;
           case '3':
+		  if(flag_th==1){
           DR_DC=s;
+		  }
            break;
-   case 'h':
+  // case '4':
   
-   break;
+  // break;
           default:
 		  nop();
 			 
@@ -250,9 +279,13 @@ nop();
 //library
 //***************************************************************************************************************************************************************************************************//
 /*PWM ACTION*/
+void pwm_off(void){
+CCP1CON = 0b00.00.0000 ; 
+}
 void power_off(void){
 CCP1CON = 0b00.00.0000 ; 
 EN_DC=0;
+flag_th=0;
 }
 int direc_change(){
 int s;
@@ -270,6 +303,7 @@ nop();
 
 void power_on(void){
 CCP1CON = 0b01.00.1100 ; 
+flag_th=1;
 }
 /*INITIALIZATION*/
 void init_serial( void )  /* initialise PIC16F690 bitbang serialcom */
@@ -438,10 +472,10 @@ void printf(const char *string, char variable)
       else putchar(k);
    }
 }
-/*DELAY*/
+/*delay*/
 void delay( char millisec)
 /* 
-  Delays a multiple of 1 milliseconds at 4 MHz (16F628 internal clock)
+  delay10s a multiple of 1 milliseconds at 4 MHz (16F628 internal clock)
   using the TMR0 timer 
 */
 {
@@ -451,6 +485,13 @@ void delay( char millisec)
         while ( TMR0 < 125)   /* 125 * 8 = 1000  */
             ;
     } while ( -- millisec > 0);
+}
+void delay10( char n)
+{
+    char i; OPTION = 7;
+    do  { i = TMR0 + 39; /* 256 microsec * 39 = 10 ms */
+           while ( i != TMR0)  ;
+        } while ( --n > 0);
 }
 /*MEMORY ACCESS*/
 void putchar_eedata( char data, char adress )

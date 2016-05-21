@@ -84,7 +84,7 @@
         <GUIConfig name="openSaveDir" value="0" defaultDirPath="" />
         <GUIConfig name="titleBar" short="no" />
         <GUIConfig name="stylerTheme" path="D:\PK2proj\npp\stylers.xml" />
-        <GUIConfig name="DockingManager" leftWidth="200" rightWidth="200" topHeight="200" bottomHeight="258">
+        <GUIConfig name="DockingManager" leftWidth="200" rightWidth="200" topHeight="200" bottomHeight="142">
             <PluginDlg pluginName="NppExec.dll" id="2" curr="3" prev="-1" isVisible="yes" />
             <ActiveTabs cont="0" activeTab="-1" />
             <ActiveTabs cont="1" activeTab="-1" />
@@ -94,12 +94,18 @@
     </GUIConfigs>
     <!-- The History of opened files list -->
     <FindHistory nbMaxFindHistoryPath="10" nbMaxFindHistoryFilter="10" nbMaxFindHistoryFind="10" nbMaxFindHistoryReplace="10" matchWord="no" matchCase="no" wrap="yes" directionDown="yes" fifRecuisive="yes" fifInHiddenFolder="no" dlgAlwaysVisible="no" fifFilterFollowsDoc="no" fifFolderFollowsDoc="no" searchMode="0" transparencyMode="1" transparency="150" dotMatchesNewline="no">
+        <Find name="EN_DC" />
+        <Find name="trisc.4" />
+        <Find name=".4" />
+        <Find name="trisc" />
+        <Find name="PORTB.5" />
+        <Find name="TRISB.5" />
+        <Find name="choose" />
+        <Find name="choose h" />
         <Find name="nop" />
         <Find name="putchar" />
-        <Find name="printf" />
-        <Find name="pause" />
-        <Find name="INIT" />
-        <Find name="DELAY" />
+        <Replace name="PORTC.4" />
+        <Replace name="TRISC.4" />
         <Replace name="delay" />
     </FindHistory>
     <History nbMaxFile="15" inSubMenu="no" customLength="-1">
